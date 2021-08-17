@@ -1,7 +1,8 @@
 package com.devsuperior.hrpayroll.resources;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,20 +11,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.devsuperior.hrpayroll.entities.Payment;
 import com.devsuperior.hrpayroll.services.PaymentService;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 /*anotation para servir como recursos web*/
 @RestController
 @RequestMapping(value = "/payments")
 public class PaymentResource {
-	
+	static Logger logger = LoggerFactory.getLogger(PaymentService.class);
+
 	@Autowired
 	private PaymentService service;
 	
+	@HystrixCommand(fallbackMethod="getPaymentAlternative")
 	@GetMapping(value = "/{workerId}/days/{days}")
 	public ResponseEntity<Payment> getPayment(@PathVariable Long workerId, @PathVariable Integer days){
+		//logger.info("PaymentResoruce****************************************** workerid: " + workerId + "days" + days);
+
 		Payment payment = service.getPayment(workerId, days);
 		return ResponseEntity.ok(payment);
 		
 	}
 	
+	public ResponseEntity<Payment> getPaymentAlternative(@PathVariable Long workerId, Integer days){
+		Payment payment = new Payment("Brann", 400.0,days);
+		return ResponseEntity.ok(payment);
+	}
 }

@@ -16,25 +16,27 @@ import com.devsuperior.hrworker.entities.Worker;
 import com.devsuperior.hrworker.repositories.WorkerRepository;
 /*classe que serve como Web Service, recursos que disponibilizará os ends-points*/
 @RestController
-@RequestMapping(value="/workers")
+@RequestMapping(value = "/workers")
 public class WorkerResource {
 	
 	private static Logger logger = LoggerFactory.getLogger(WorkerResource.class);
 	
 	@Autowired
-	Environment env;
+	private Environment env;
 	@Autowired /*injeção de dependencias usando o framework*/
 	private WorkerRepository repository; /*objeto q acessa o banco de dados*/
 	
 	@GetMapping
 	public ResponseEntity<List<Worker>> findAll() {
 		List<Worker> list = repository.findAll();
+		logger.info("Worker Resoure Function ResponseEntity************************* ");
+
 		return ResponseEntity.ok(list);
 	}
 	
 	@GetMapping(value = "/{id}")/*Para o id ser passado por parametro e ser pego pelo GetMapping é necessario colocar o @PathVariable*/
 	public ResponseEntity<Worker> findById(@PathVariable Long id){
-		
+
 		logger.info("Port = " + env.getProperty("local.server.port"));
 		Worker obj = repository.findById(id).get();
 		return ResponseEntity.ok(obj);

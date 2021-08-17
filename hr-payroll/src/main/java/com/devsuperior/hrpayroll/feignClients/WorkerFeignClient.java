@@ -11,8 +11,6 @@ import com.devsuperior.hrpayroll.entities.Worker;
 
 @Component
 @FeignClient(name = "hr-worker", path = "/workers")
-
-
 public interface WorkerFeignClient {
 	
 	@GetMapping(value = "/{id}")
