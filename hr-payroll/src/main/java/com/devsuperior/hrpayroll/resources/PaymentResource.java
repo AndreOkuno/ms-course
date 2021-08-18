@@ -32,7 +32,7 @@ public class PaymentResource {
 		
 	}
 	
-	public ResponseEntity<Payment> getPaymentAlternative(@PathVariable Long workerId, Integer days){
+	public ResponseEntity<Payment> getPaymentAlternative(Long workerId, Integer days){
 		Payment payment = new Payment("Brann", 400.0,days);
 		return ResponseEntity.ok(payment);
 	}
